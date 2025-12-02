@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Magic the Gathering Decklist / Registration Sheet Generator</title>
     <meta charset="utf-8">
@@ -12,8 +13,8 @@
     <script type="text/javascript" src="js/jquery/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>
 
-    <!-- List of all cards (thanks, mtgjson!) -->
-    <script type="text/javascript" src="js/cards/decklist-cards-min.js" ></script>
+    <!-- List of all cards (thanks, piltoverarchive!) -->
+    <script type="text/javascript" src="js/cards/decklist-cards-min.js"></script>
 
     <!-- jsPDF and associated libraries -->
     <script type="text/javascript" src="js/jsPDF/dist/jspdf.min.js"></script>
@@ -33,7 +34,9 @@
     <script type="text/javascript" src="js/decklist/dci.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/auseternal.css">
-    <link rel='stylesheet' id='hemingway_googleFonts-css'  href='https://fonts.googleapis.com/css?family=Lato%3A400%2C700%2C400italic%2C700italic%7CRaleway%3A700%2C400&#038;ver=4.2.2' type='text/css' media='all' />
+    <link rel='stylesheet' id='hemingway_googleFonts-css'
+        href='https://fonts.googleapis.com/css?family=Lato%3A400%2C700%2C400italic%2C700italic%7CRaleway%3A700%2C400&#038;ver=4.2.2'
+        type='text/css' media='all' />
 
 </head>
 
@@ -47,18 +50,18 @@
                 <div class="wrapleft">
                     <div class="left">
                         <form>
-                            <div class="personal"><h2>Personal Information</h2></div>
+                            <div class="personal">
+                                <h2>Personal Information</h2>
+                            </div>
                             <label for="firstname">
                                 <div class="form">
-                                <input type="text" id="firstname" placeholder="First Name"></div>
+                                    <input type="text" id="firstname" placeholder="First Name">
+                                </div>
                             </label>
                             <label for="lastname">
                                 <div class="form"><input type="text" id="lastname" placeholder="Last Name"></div>
                             </label>
-                            <label for="wizacct">
-                                <input type="text" id="wizacct" placeholder="Wizards Account">
-                            </label><br>
-                            <h2>Event Information</h2><br/>
+                            <h2>Event Information</h2><br />
                             <label for="event">
                                 <div class="form"><input type="text" id="event" placeholder="Event"></div>
                             </label>
@@ -68,89 +71,97 @@
                             <label for="eventlocation">
                                 <input type="text" id="eventlocation" placeholder="Event Location">
                             </label><br>
-                            <h2>Deck Information</h2><br/>
+                            <h2>Deck Information</h2><br />
                             <label for="deckname">
                                 <div class="form"><input type="text" id="deckname" placeholder="Deck Name"></div>
                             </label>
                             <label for="deckdesigner">
                                 <input type="text" id="deckdesigner" placeholder="Deck Designer">
                             </label><br>
-
-                            <h2>Deck Format</h2><br/>
-                            <label for="eventformat">
-                                <div class="form"><select name="eventformat" placeholder="Event Format">
-                                    <option value="Any">Any</option>
-                                    <option value="Standard">Standard</option>
-                                    <option value="Pioneer">Pioneer</option>
-                                    <option value="Modern">Modern</option>
-                                    <option value="Highlander">Australian 7pt Highlander</option>
-                                    <option value="Legacy">Legacy</option>
-                                    <option value="Vintage">Vintage</option>
-                                </select></div>
-                            </label><br/>
                             <label for="deckmain">
-                                <textarea id="deckmain" placeholder="Main Deck. You can copy/paste most decks from online sources here without separating the Sideboard."></textarea>
-                            </label><br/>
-                            <input type="text" id="cardentry" placeholder="Manual Entry (Alt-⏎ for Sideboard)" style="width: 60%;">
-                            <input type="button" id="cardtomain" value="↑" class="cardbutton ui-button" role="button" onclick="cardToMain();">
-                            <input type="button" id="cardtoside" value="↓" class="cardbutton ui-button" role="button" onclick="cardToSide();"></label><br/><br/>
+                                <textarea id="deckmain"
+                                    placeholder="Main Deck. You can copy/paste most decks from online sources here without separating the Sideboard."></textarea>
+                            </label><br />
+                            <input type="text" id="cardentry" placeholder="Manual Entry (Alt-⏎ for Sideboard)"
+                                style="width: 60%;">
+                            <input type="button" id="cardtomain" value="↑" class="cardbutton ui-button" role="button"
+                                onclick="cardToMain();">
+                            <input type="button" id="cardtoside" value="↓" class="cardbutton ui-button" role="button"
+                                onclick="cardToSide();"></label><br /><br />
                             <label for="deckside">
                                 <textarea id="deckside" placeholder="Sideboard"></textarea>
                             </label><br>
-                            <h2>Deck Sort Order</h2><br/>
+                            <h2>Deck Sort Order</h2><br />
                         </form>
                     </div> <!-- left -->
                     <div id="sortorderwrapper">
                         <div id="sortorderfloat" class="ui-buttonset">
-                            <input type="radio" id="sortorder1" name="sortorder"><label for="sortorder1">Alphabetically</label>
+                            <input type="radio" id="sortorder1" name="sortorder"><label
+                                for="sortorder1">Alphabetically</label>
                             <input type="radio" id="sortorder2" name="sortorder"><label for="sortorder2">CMC</label>
-                            <input type="radio" id="sortorder3" name="sortorder" checked><label for="sortorder3">Colour (recommended)</label>
-                            <input type="radio" id="sortorder4" name="sortorder"><label for="sortorder4">Numerically</label>
-                            <input type="radio" id="sortorder5" name="sortorder"><label for="sortorder5">Original</label>
+                            <input type="radio" id="sortorder3" name="sortorder" checked><label for="sortorder3">Colour
+                                (recommended)</label>
+                            <input type="radio" id="sortorder4" name="sortorder"><label
+                                for="sortorder4">Numerically</label>
+                            <input type="radio" id="sortorder5" name="sortorder"><label
+                                for="sortorder5">Original</label>
                         </div>
                     </div> <!-- sortorderwrapper -->
                     <br>
                     <div class="left"></div>
-                            <h2>Import Decklist</h2><br/>
-                            <label for="csv-file-input">
-                                <div class="form"><input type="file" id="csv-file-input" accept=".csv"></div>
-                            </label>
-                            <input type="button" id="import-csv-button" value="Import from Melee.gg CSV" class="ui-button ui-widget ui-state-default ui-corner-all">
-                    </div>
-                </div> <!-- wrapleft -->
-                <div class="right">
-                    <h2>
-                        Decklist Preview
-                    </h2><br>
-                    <div id="decklistpreview">
-                        <iframe id="decklist" name="decklist" height="580" width="440"></iframe>
-                    </div>
-                    <div id="deckliststatuses">
-                        <div class="deckliststatus" id="dle1"><img src="images/error.png">Decklist contains &lt;60 cards.</div>
-                        <div class="deckliststatus" id="dlw1"><img src="images/warning.png">Decklist contains &gt;60 cards.</div>
-                    </div>
-                    <form>
-                        <input type="button" id="download" value="Download Decklist (PDF)" onclick="generateDecklistPDF('dataurlnewwindow');"/>
-                        <input type="button" id="downloadtxt" value="Download Decklist (Txt/MTGO)" onclick="generateDecklistPDF('txt');"/>
-                        <input type="button" id="downloaddec" value="Download Decklist (DEC)" onclick="generateDecklistPDF('dec');"/>
-                        <input type="button" id="upload" value="Upload Decklist" onclick="uploadDecklistPDF();"/>
-                        <input type="button" id="getlink" value="Get Link To Decklist" onclick="openDeckWindow('index');" class="ui-button ui-widget ui-state-default ui-corner-all"/>
-                        <input type="button" id="getplaytest" value="Generate Playtest Cards" onclick="openDeckWindow('playtest');" class="ui-button ui-widget ui-state-default ui-corner-all"/>
-                        <input type="button" id="deckcheck" value="Deck Check Mode" onclick="openDeckWindow('deckcheck');" class="ui-button ui-widget ui-state-default ui-corner-all"/>
-                        <span><div id="URL"></div></span>
-                    </form>
-                    <h2>Status</h2>
-                    <div class="status default">
-                        <div class="statusmark"></div>
-                        <ul class="details"></ul>
-                    </div>
-                </div> <!-- right -->
-
-                <div class="footer">
-                    Magic: the Gathering Decklist Generator by <a href="http://www.twoevils.org/">April King</a>. Please send feedback to <a href="mailto:april@pokeinthe.io?subject=Decklist.org%20feedback">april@pokeinthe.io</a>, or contribute issue reports or code additions <a href="https://github.com/marumari/decklist">via GitHub</a>.<br /><br />Modified by <a href="https://github.com/Fryyyyy/decklist">Fry</a> for Australian 7pt Highlander, multiple pages, autocomplete card entry, legality checking, playtest generator and deck check mode.<br /><br />Magic: The Gathering &reg; Wizards of the Coast.
                 </div>
-            </div> <!-- content full width -->
-        </div> <!-- wrapper.section inner -->
+            </div> <!-- wrapleft -->
+            <div class="right">
+                <h2>
+                    Decklist Preview
+                </h2><br>
+                <div id="decklistpreview">
+                    <iframe id="decklist" name="decklist" height="580" width="440"></iframe>
+                </div>
+                <div id="deckliststatuses">
+                    <div class="deckliststatus" id="dle1"><img src="images/error.png">Decklist does not contain exactly
+                        40 cards.
+                    </div>
+                    <div class="deckliststatus" id="dlw1"><img src="images/warning.png">Decklist does not contain
+                        exactly 40 cards.
+                    </div>
+                </div>
+                <form>
+                    <input type="button" id="download" value="Download Decklist (PDF)"
+                        onclick="generateDecklistPDF('dataurlnewwindow');" />
+                    <input type="button" id="downloadtxt" value="Download Decklist (Txt)"
+                        onclick="generateDecklistPDF('txt');" />
+                    <input type="button" id="downloaddec" value="Download Decklist (DEC)"
+                        onclick="generateDecklistPDF('dec');" />
+                    <input type="button" id="upload" value="Upload Decklist" onclick="uploadDecklistPDF();" />
+                    <input type="button" id="getlink" value="Get Link To Decklist" onclick="openDeckWindow('index');"
+                        class="ui-button ui-widget ui-state-default ui-corner-all" />
+                    <input type="button" id="getplaytest" value="Generate Playtest Cards"
+                        onclick="openDeckWindow('playtest');"
+                        class="ui-button ui-widget ui-state-default ui-corner-all" />
+                    <input type="button" id="deckcheck" value="Deck Check Mode" onclick="openDeckWindow('deckcheck');"
+                        class="ui-button ui-widget ui-state-default ui-corner-all" />
+                    <span>
+                        <div id="URL"></div>
+                    </span>
+                </form>
+                <h2>Status</h2>
+                <div class="status default">
+                    <div class="statusmark"></div>
+                    <ul class="details"></ul>
+                </div>
+            </div> <!-- right -->
+
+            <div class="footer">
+                Riftbound Decklist Generator by <a href="http://www.twoevils.org/">Villa</a>. Please
+                send feedback to <a href="mailto:judgevillawhatever@gmail.com">judgevillawhatever@gmail.com</a>, or
+                contribute issue reports or code additions <a href="https://github.com/Villawhatever/decklist">via
+                    GitHub</a>.<br /><br />Based almost entirely off <a href="http://www.twoevils.org/">April King</a>'s
+                work for Magic decklists.<br /><br />Riftbound &reg; Riot Games.
+            </div>
+        </div> <!-- content full width -->
+    </div> <!-- wrapper.section inner -->
     </div> <!-- bigwrapper -->
 </body>
+
 </html>
