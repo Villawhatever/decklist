@@ -161,7 +161,6 @@ function pdfChangeWait() {
 
 // Good ol' Javascript, not having a capitalize function on string objects
 String.prototype.capitalize = function () {
-    // return this.replace( /(^|\s)([a-z])/g, function(m,p1,p2) { return p1+p2.toUpperCase(); } );
     return this.replace(/(^)([a-z])/g, function (m, p1, p2) { return p1 + p2.toUpperCase(); }); // 1st char
 };
 
@@ -206,24 +205,6 @@ function parseGET() {
         }
     }
 
-    // get rid of any logos/branding; we don't care about Magic ones and I don't want to get yelled at by Riot legal
-    // load the logo
-    // if ($._GET['logo'] == undefined) { $._GET['logo'] = '7ph'; } // if logo isn't specified, use the 7ph logo
-    // var logos = ['dcilogo', '7ph', 'gaslogo'];
-
-    // for (i = 0; i < logos.length; i++) {
-    //     if ($._GET['logo'] == logos[i]) {
-    //         var element = document.createElement("script");
-
-    //         element.src = 'images/' + logos[i] + '.js';
-    //         element.type = "text/javascript";
-    //         element.id = "logo";
-    //         element.onload = function () { generateDecklistPDF(); };
-
-    //         document.getElementsByTagName("head")[0].appendChild(element);
-    //     }
-    // }
-
     // make the upload button visible, if uploadURL exists
     if ($._GET["uploadURL"] != undefined) {
         $("#upload").css("display", "inline-block");
@@ -246,17 +227,6 @@ function detectPDFPreviewSupport() {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if ((navigator.userAgent.indexOf('Mobile') == -1) && (navigator.userAgent.indexOf('Tablet') == -1)) { showpreview = true; }
         else { showpreview = false; } // have to reset it, as FF Mobile application/pdf listed, but not supported (wtf?)
-    }
-}
-
-function addLogoToDL(dl) {
-    for (var i = 1; i <= dl.internal.getNumberOfPages(); i++) {
-        dl.setPage(i);
-        if ($("select[name=eventformat]").val() == "Highlander") {
-            dl.addImage(logo, 'JPEG', 33, 12, 45, 45);
-        } else {
-            dl.addImage(logo, 'JPEG', 30, 30, 70, 70);
-        }
     }
 }
 
@@ -389,12 +359,6 @@ function addTemplateToDL(dl) {
     dl.rect(320, 734, 260, 12); // dc round + dc round
     dl.rect(320, 746, 260, 12); // status + status
 
-    //var y = 140;
-    //while (y < 380) {
-    //    dl.rect(27, y, 24, 24);  // dci digits
-    //    y = y + 24;
-    //}
-
     // Get all the various notes down on the page
     // There are a ton of them, so this will be exciting
     dl.setFontSize(15);
@@ -406,8 +370,12 @@ function addTemplateToDL(dl) {
     dl.text('PRINT CLEARLY USING ENGLISH CARD NAMES', 36, 121);
 
     dl.setFontSize(13);
-    dl.text('Main Deck:', 62, 149);
-    dl.text('Main Deck Continued:', 336, 149);
+    dl.text('Legend:', 62, 149);
+    dl.line(62, 170, 306, 170);
+    dl.setFillColor(45);
+    dl.text('Chosen Champion', 116, 186);
+    dl.setFillColor(150);
+    dl.text('Battlefields', 336, 149);
     dl.text('Sideboard:', 336, 404);
 
     dl.setFontSize(11);
@@ -435,7 +403,7 @@ function addTemplateToDL(dl) {
     dl.text('Last Name:', 41, 760, 90);
 
     dl.setFontStyle('italic');
-    dl.text('Wizard Acct:', 41, 404, 90);   // dci # is rotated and italic
+    dl.text('Riot ID:', 41, 404, 90);   // Riot ID # is rotated and italic
 
     dl.setFontSize(6);
     dl.setFontStyle('normal');
@@ -464,7 +432,7 @@ function addTemplateToDL(dl) {
     }
 
     y = 186;
-    while (y < 386) // second column of lines (main deck)
+    while (y < 207) // second column of lines (main deck)
     {
         dl.line(336, y, 380, y);
         dl.line(390, y, 580, y);
