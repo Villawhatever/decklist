@@ -94,7 +94,6 @@
                             <label for="deckside">
                                 <textarea id="deckside" placeholder="Sideboard"></textarea>
                             </label><br>
-                            <h2>Deck Sort Order</h2><br />
                         </form>
                     </div> <!-- left -->
                     <br>
@@ -119,21 +118,6 @@
                 <form>
                     <input type="button" id="download" value="Download Decklist (PDF)"
                         onclick="generateDecklistPDF('dataurlnewwindow');" />
-                    <input type="button" id="downloadtxt" value="Download Decklist (Txt)"
-                        onclick="generateDecklistPDF('txt');" />
-                    <input type="button" id="downloaddec" value="Download Decklist (DEC)"
-                        onclick="generateDecklistPDF('dec');" />
-                    <input type="button" id="upload" value="Upload Decklist" onclick="uploadDecklistPDF();" />
-                    <input type="button" id="getlink" value="Get Link To Decklist" onclick="openDeckWindow('index');"
-                        class="ui-button ui-widget ui-state-default ui-corner-all" />
-                    <input type="button" id="getplaytest" value="Generate Playtest Cards"
-                        onclick="openDeckWindow('playtest');"
-                        class="ui-button ui-widget ui-state-default ui-corner-all" />
-                    <input type="button" id="deckcheck" value="Deck Check Mode" onclick="openDeckWindow('deckcheck');"
-                        class="ui-button ui-widget ui-state-default ui-corner-all" />
-                    <span>
-                        <div id="URL"></div>
-                    </span>
                 </form>
                 <h2>Status</h2>
                 <div class="status default">
