@@ -765,7 +765,6 @@ function generateDecklistPDF(outputtype) {
 
     // Output the dl as a blob to add to the DOM
     if (outputtype == 'dataurlstring') {
-        addLogoToDL(dl);
         domdl = dl.output('dataurlstring');
 
         // Put the DOM into the live preview iframe
@@ -838,7 +837,6 @@ function generateDecklistPDF(outputtype) {
 }
 
 function savePDF(dl, filename) {
-    addLogoToDL(dl);
     dl.save(filename);
 }
 
