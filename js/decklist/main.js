@@ -180,7 +180,7 @@ String.prototype.capitalize = function () {
 
 // Parse the GET attributes, locking out fields as needed
 function parseGET() {
-    var params = ['firstname', 'lastname', 'wizacct', 'event', 'eventdate', 'eventlocation', 'deckname', 'deckdesigner', 'deckmain', 'deckside', 'eventformat'];
+    var params = ['firstname', 'lastname', 'riotid', 'event', 'eventdate', 'eventlocation', 'deckname', 'deckdesigner', 'deckmain', 'deckside', 'legend'];
 
     // check for event, eventdate, or eventlocation and lock down those input fields
     for (var i = 0; i < params.length; i++) {
@@ -369,11 +369,15 @@ function addTemplateToDL(dl) {
     dl.setFontSize(13);
     dl.text('PRINT CLEARLY USING ENGLISH CARD NAMES', 36, 121);
 
+    dl.setFillColor("#ababab");
+    dl.setFontSize(11);
+    dl.text('Chosen Champion', 113, 211);
+
     dl.setFontSize(13);
-    dl.text('Legend:', 62, 149);
+    dl.setFillColor(150);
+    dl.text('Champion Legend', 62, 149);
     dl.line(62, 170, 306, 170);
-    dl.setFillColor(45);
-    dl.text('Chosen Champion', 116, 186);
+
     dl.setFillColor(150);
     dl.text('Battlefields', 336, 149);
     dl.text('Sideboard:', 336, 404);
@@ -490,15 +494,17 @@ function addHLMetadataToDL(dl) {
     dl.text(firstname, 383, 23);
 
     // put the Wizard Acct into the PDF
-    wizacct = $("#wizacct").val();
+    riotid = $("#riotid").val();
     dl.setFontSize(11);
-    dl.text(wizacct, 614, 23);
+    dl.text(riotid, 614, 23);
 
     dl.setFontSize(13);
     dl.setFontStyle('normal');
 
     dl.text($("#deckname").val().capitalize(), 165, 50);
     dl.text($("#deckdesigner").val().capitalize(), 404, 50);
+
+    dl.text($("#legend").val().capitalize(), 62, 170);
     if ($("#eventdate").val() != "") {
         dl.text($("#event").val().capitalize() + ' (' + $("#eventdate").val() + ')', 572, 50);
     } else {
@@ -552,10 +558,10 @@ function addMetaDataToDL(dl) {
         dl.setFontSize(12);
     }
 
-    wizacct = $("#wizacct").val();
-    if (wizacct) {
+    riotid = $("#riotid").val();
+    if (riotid) {
         // put the Wizard Account into the PDF
-        dl.text(wizacct, 43, 365, 90);
+        dl.text(riotid, 43, 365, 90);
     }
     dl.setFontStyle('normal');
 }
@@ -775,7 +781,7 @@ function generateDecklistPDF(outputtype) {
         return (rawPDF);
     }
     else if (outputtype == 'txt' || outputtype == 'dec') {
-        var data = ($("#firstname").val().capitalize() + ' ' + $("#lastname").val().capitalize() + ' ' + $("#wizacct").val() + '\r\n').trim();
+        var data = ($("#firstname").val().capitalize() + ' ' + $("#lastname").val().capitalize() + ' ' + $("#riotid").val() + '\r\n').trim();
         data += ($("#eventdate").val() + ' ' + $("#eventlocation").val().capitalize() + ' ' + $("#event").val().capitalize() + '\r\n').trim();
         data += "\r\n";
         // data += "Main Deck\r\n";
@@ -853,7 +859,7 @@ function validateInput() {
     validate = {
         'firstname': [],
         'lastname': [],
-        'wizacct': [],
+        'riotid': [],
         'event': [],
         'eventdate': [],
         'eventlocation': [],
@@ -877,8 +883,8 @@ function validateInput() {
     }
 
     // check Wiz acct
-    if ($('#wizacct').val() === '') {
-        validate.wizacct.push({ 'warning': 'blank' });
+    if ($('#riotid').val() === '') {
+        validate.riotid.push({ 'warning': 'blank' });
     }
 
     // check event name (non-blank)
@@ -1091,7 +1097,7 @@ function statusAndTooltips(valid) {
                 } else if (validationObject['error'] === 'toolarge') {
                     notifications.push(prop, ['Last name too long', validType]);
                 }
-            } else if (prop === 'wizacct') {
+            } else if (prop === 'riotid') {
                 if (validationObject['warning'] === 'blank') {
                     notifications.push(prop, ['Missing Wizard Account', validType]);
                 }
@@ -1260,7 +1266,7 @@ function openDeckWindow(windowType) {
     if (windowType == "index" || windowType == 'qrcode') {
         deckURL += 'firstname=' + $("#firstname")[0].value;
         deckURL += '&lastname=' + $("#lastname")[0].value;
-        deckURL += '&wizacct=' + $("#wizacct")[0].value;
+        deckURL += '&riotid=' + $("#riotid")[0].value;
         deckURL += '&eventdate=' + this.eventdate.value;
         deckURL += '&event=' + $('#event')[0].value;
         deckURL += '&eventlocation=' + this.eventlocation.value;
