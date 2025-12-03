@@ -206,22 +206,23 @@ function parseGET() {
         }
     }
 
+    // get rid of any logos/branding; we don't care about Magic ones and I don't want to get yelled at by Riot legal
     // load the logo
-    if ($._GET['logo'] == undefined) { $._GET['logo'] = '7ph'; } // if logo isn't specified, use the 7ph logo
-    var logos = ['dcilogo', '7ph', 'gaslogo'];
+    // if ($._GET['logo'] == undefined) { $._GET['logo'] = '7ph'; } // if logo isn't specified, use the 7ph logo
+    // var logos = ['dcilogo', '7ph', 'gaslogo'];
 
-    for (i = 0; i < logos.length; i++) {
-        if ($._GET['logo'] == logos[i]) {
-            var element = document.createElement("script");
+    // for (i = 0; i < logos.length; i++) {
+    //     if ($._GET['logo'] == logos[i]) {
+    //         var element = document.createElement("script");
 
-            element.src = 'images/' + logos[i] + '.js';
-            element.type = "text/javascript";
-            element.id = "logo";
-            element.onload = function () { generateDecklistPDF(); };
+    //         element.src = 'images/' + logos[i] + '.js';
+    //         element.type = "text/javascript";
+    //         element.id = "logo";
+    //         element.onload = function () { generateDecklistPDF(); };
 
-            document.getElementsByTagName("head")[0].appendChild(element);
-        }
-    }
+    //         document.getElementsByTagName("head")[0].appendChild(element);
+    //     }
+    // }
 
     // make the upload button visible, if uploadURL exists
     if ($._GET["uploadURL"] != undefined) {
@@ -1159,7 +1160,7 @@ function statusAndTooltips(valid) {
                 } else if (validationObject['warning'] === 'unrecognized') {
                     // include a list of unrecognized card names
                     unrecognizedCardsHtml = '<ul><li>' + Object.getOwnPropertyNames(unrecognizedCards).join('</li><li>') + '</li></ul>';
-                    notifications.push(prop, ['Couldn\'t recognise the following card(s):' + unrecognizedCardsHtml, validType]);
+                    notifications.push(prop, ['Couldn\'t recognize the following card(s):' + unrecognizedCardsHtml, validType]);
                 } else if (validationObject['warning'] === 'unparseable') {
                     // include a list of unparseable lines
                     unparseableCardsHtml = '<ul><li>' + unparseableCards.join('</li><li>') + '</li></ul>';
