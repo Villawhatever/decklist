@@ -347,7 +347,9 @@ function addTemplateToDL(dl) {
     dl.rect(27, 140, 24, 449);  // first name + dci
 
     dl.rect(250, 748, 56, 22); // total number main deck
-    dl.rect(524, 694, 56, 22); // total number side deck
+    dl.rect(524, 595, 56, 22); // total number side deck
+    dl.rect(524, 263, 56, 22); // total number battlefields
+    dl.rect(524, 382, 56, 22); // total number rune deck
     dl.rect(320, 722, 260, 48); // judge box
 
 
@@ -369,28 +371,34 @@ function addTemplateToDL(dl) {
     dl.setFontSize(13);
     dl.text('PRINT CLEARLY USING ENGLISH CARD NAMES', 36, 121);
 
-    dl.setFillColor("#ababab");
+    dl.setTextColor(200, 200, 200);
     dl.setFontSize(11);
-    dl.text('Chosen Champion', 113, 211);
+    dl.text('Chosen Champion', 195, 220);
 
     dl.setFontSize(13);
-    dl.setFillColor(150);
+    dl.setTextColor(0, 0, 0);
     dl.text('Champion Legend', 62, 149);
     dl.line(62, 170, 306, 170);
 
     dl.setFillColor(150);
-    dl.text('Battlefields', 336, 149);
-    dl.text('Sideboard:', 336, 404);
+    dl.text('Main Deck', 62, 186);
+    dl.text('Battlefields', 336, 186);
+    dl.text('Rune Deck', 336, 305);
+    dl.text('Sideboard', 336, 424);
 
     dl.setFontSize(11);
-    dl.text('# in deck:', 62, 166);  // first row, main deck
-    dl.text('Card Name:', 122, 166);
-    dl.text('# in deck:', 336, 166); // second row, main deck
-    dl.text('Card Name:', 396, 166);
-    dl.text('# in deck:', 336, 420); // second row, sideboard
-    dl.text('Card Name:', 396, 420);
+    dl.text('# in deck:', 62, 206);  // first row, main deck
+    dl.text('Card Name:', 122, 206);
+    dl.text('# in deck:', 336, 206); // second column, battlefields
+    dl.text('Card Name:', 396, 206);
+    dl.text('# in deck:', 336, 325); // second column, rune deck
+    dl.text('Card Name:', 396, 325);
+    dl.text('# in deck:', 336, 444); // second column, sideboard
+    dl.text('Card Name:', 396, 444);
+    dl.text('Total Number of Battlefields:', 336, 283);
     dl.text('Total Number of Cards in Main Deck:', 62, 768);
-    dl.text('Total Number of Cards in Sideboard:', 336, 714);
+    dl.text('Total Number of Cards in Rune Deck:', 336, 402);
+    dl.text('Total Number of Cards in Sideboard:', 336, 615);
 
     dl.setFontSize(7);
     dl.setFontStyle('normal');
@@ -427,28 +435,41 @@ function addTemplateToDL(dl) {
 
 
     // Now let's create a bunch of lines for putting cards on
-    y = 186;
-    while (y < 750) // first column of lines
+    y = 224;
+    lineHeight = 18;
+    maindeckLines = 30;
+    for (i = 0; i < maindeckLines; i++) // first column of lines
     {
         dl.line(62, y, 106, y);
         dl.line(116, y, 306, y);
-        y = y + 18;
+        y = y + lineHeight;
     }
 
-    y = 186;
-    while (y < 207) // second column of lines (main deck)
+    y = 224;
+    battlefieldLines = 3;
+    for (i = 0; i < battlefieldLines; i++) // second column of lines (battlefield)
     {
         dl.line(336, y, 380, y);
         dl.line(390, y, 580, y);
-        y = y + 18;
+        y = y + lineHeight;
     }
 
-    y = 438;
-    while (y < 696) // second column of lines (main deck)
+    y = 345;
+    runedeckLines = 3;
+    for (i = 0; i < runedeckLines; i++) // second column of lines (rune deck)
     {
         dl.line(336, y, 380, y);
         dl.line(390, y, 580, y);
-        y = y + 18;
+        y = y + lineHeight;
+    }
+
+    y = 464;
+    sideboardLines = 8;
+    for (i = 0; i < sideboardLines; i++) // second column of lines (sideboard)
+    {
+        dl.line(336, y, 380, y);
+        dl.line(390, y, 580, y);
+        y = y + lineHeight;
     }
 
     return (dl);
@@ -504,7 +525,6 @@ function addHLMetadataToDL(dl) {
     dl.text($("#deckname").val().capitalize(), 165, 50);
     dl.text($("#deckdesigner").val().capitalize(), 404, 50);
 
-    dl.text($("#legend").val().capitalize(), 62, 170);
     if ($("#eventdate").val() != "") {
         dl.text($("#event").val().capitalize() + ' (' + $("#eventdate").val() + ')', 572, 50);
     } else {
@@ -524,6 +544,7 @@ function addMetaDataToDL(dl) {
     dl.text($("#event").val().capitalize(), 412, 69.5);
     dl.text($("#deckname").val().capitalize(), 412, 93.5);
     dl.text($("#deckdesigner").val().capitalize(), 412, 117.5);
+    dl.text($("#legend").val().capitalize(), 62, 166);
 
     // put the first name into the PDF
     dl.setFontStyle('bold');
@@ -668,17 +689,18 @@ function addHLCardsToDL(dl) {
 
     // Add the maindeck count and sideboard count
     dl.setFontSize(20);
-    if (maindeck_count != 0) { dl.text(String(maindeck_count), 710, 460); }
+    if (maindeck_count != 0) {
+        dl.text(String(maindeck_count), 710, 460);
+    }
     if (sideboard_count != 0) {
-        if (sideboard_count < 10) { dl.text(String(sideboard_count), 714, 480); }
-        else { dl.text(String(sideboard_count), 709, 480); }
+        dl.text(String(sideboard_count), 544, 480);
     }
 }
 
 function addCardsToDL(dl) {
     // Add the deck to the decklist
     var x = 82;
-    var y = 182;
+    var y = 220;
     var numPages = 0;
     dl.setFontStyle('normal');
     if (maindeck != []) {
@@ -718,9 +740,27 @@ function addCardsToDL(dl) {
         }
     }
 
-    // Add the sideboard to the decklist
     x = 356;
-    y = 434;
+
+    y = 220;
+    if (battlefields != []) {
+        for (i = 0; i < battlefields.length; i++) {
+            dl.text(battlefields[i][1], x, y);
+            dl.text(battlefields[i][0], x + 38, y);
+            y = y + lineHeight;
+        }
+    }
+
+    y = 341;
+    if (runes != []) {
+        for (i = 0; i < runes.length; i++) {
+            dl.text(runes[i][1], x, y);
+            dl.text(runes[i][0], x + 38, y);
+            y = y + lineHeight;
+        }
+    }
+
+    y = 460;
     if (sideboard != []) {
         for (i = 0; i < sideboard.length; i++) {
             dl.text(sideboard[i][1], x, y);
@@ -731,10 +771,17 @@ function addCardsToDL(dl) {
 
     // Add the maindeck count and sideboard count
     dl.setFontSize(20);
-    if (maindeck_count != 0) { dl.text(String(maindeck_count), 268, 766); }
+    if (maindeck_count != 0) {
+        dl.text(String(maindeck_count), 268, 766);
+    }
     if (sideboard_count != 0) {
-        if (sideboard_count < 10) { dl.text(String(sideboard_count), 547, 712); }
-        else { dl.text(String(sideboard_count), 541, 712); }
+        dl.text(String(sideboard_count), 541, 613)
+    }
+    if (battlefield_count != 0) {
+        dl.text(String(battlefield_count), 541, 281)
+    }
+    if (runedeck_count != 0) {
+        dl.text(String(runedeck_count), 541, 400)
     }
 }
 
@@ -865,6 +912,8 @@ function validateInput() {
         'eventlocation': [],
         'deckmain': [],
         'deckside': [],
+        'battlefields': [],
+        'deckrunes': [],
         'format': []
     };
 
@@ -882,7 +931,7 @@ function validateInput() {
         validate.lastname.push({ 'error': 'toolarge' });
     }
 
-    // check Wiz acct
+    // check Riot ID
     if ($('#riotid').val() === '') {
         validate.riotid.push({ 'warning': 'blank' });
     }
@@ -907,14 +956,30 @@ function validateInput() {
     }
 
     // check maindeck (size, number of unique cards)
-    if ((maindeck_count == 0) || (maindeck_count > 60)) {
-        validate.deckmain.push({ 'warning': 'size' });
-    } else if (maindeck_count < 60) {
-        validate.deckmain.push({ 'error': 'toosmall' });
+    if (maindeck_count != 40) {
+        validate.deckmain.push({ 'error': 'decksize' });
     }
 
     // check sideboard (size)
-    if (sideboard_count != 0 && sideboard_count != 8) { validate.deckside.push({ 'error': 'sbsize' }); }
+    if (sideboard_count != 0 && sideboard_count != 8) {
+        validate.deckside.push({ 'error': 'sbsize' });
+    }
+
+    // check rune deck (size)
+    if (runedeck_count != 12) {
+        validate.deckrunes.push({ 'error': 'runedecksize' });
+    }
+
+    // check battlefields (uniqueness and count) {
+    if (battlefield_count != 3) {
+        validate.battlefields.push({ 'error': 'bfcount' });
+    }
+
+    if (battlefields.some(x => x[1] > 1)) {
+
+        console.log(battlefields);
+        validate.battlefields.push({ 'error': 'bfunique' });
+    }
 
     // check combined main/sb (quantity of each unique card, unrecognized cards)
     mainPlusSide = mainAndSide();
@@ -1121,9 +1186,7 @@ function statusAndTooltips(valid) {
                 if (validationObject['warning'] === 'size') {
                     notifications.push(prop, ['Decks must consist of exactly 40 cards', validType]);
                 }
-                else if (validationObject['error'] === 'toosmall') {
-                    notifications.push(prop, ['Decks must consist of exactly 40 cards', validType]);
-                } else if (validationObject['error'] === 'toolarge') {
+                else if (validationObject['error'] === 'decksize') {
                     notifications.push(prop, ['Decks must consist of exactly 40 cards', validType]);
                 } else if (validationObject['error'] === 'quantity') {
                     // include a list of cards that exceed 3 across the main/side
@@ -1139,7 +1202,7 @@ function statusAndTooltips(valid) {
                     notifications.push(prop, ['Couldn\'t parse the following lines:' + unparseableCardsHtml, validType]);
                 }
             } else if (prop === 'deckside') {
-                if (validationObject['warning'] === 'sbsize') {
+                if (validationObject['error'] === 'sbsize') {
                     notifications.push(prop, ['Sideboard must consist of exactly 0 or 8 cards', validType]);
                 }
             } else if (prop === "format") {
@@ -1150,6 +1213,17 @@ function statusAndTooltips(valid) {
                 } else if (validationObject["error"] === "notlegal") {
                     illegalCardsHtml = '<ul><li>' + illegalCards.join('</li><li>') + '</li></ul>';
                     notifications.push(prop, ["List contains card/s not legal in the format:" + illegalCardsHtml, validType]);
+                }
+            } else if (prop === 'deckrunes') {
+                if (validationObject['error'] === 'runedecksize') {
+                    notifications.push(prop, ['Rune Deck must consist of exactly 12 runes', validType]);
+                }
+            } else if (prop === 'battlefields') {
+                if (validationObject['error'] === 'bfcount') {
+                    notifications.push(prop, ['You must play exactly 3 battlefields', validType]);
+                }
+                if (validationObject['error'] === 'bfunique') {
+                    notifications.push(prop, ['All battlefields must be unique', validType]);
                 }
             }
         }

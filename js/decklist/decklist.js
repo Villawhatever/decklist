@@ -7,10 +7,14 @@ function parseDecklist() {
   // Let's store the lists in a tidy little array
   maindeck = [];
   sideboard = [];
+  battlefields = [];
+  runedeck = [];
 
   // And let's store their counts for future reference
   maindeck_count = 0;
   sideboard_count = 0;
+  battlefield_count = 0;
+  runedeck_count = 0;
 
   // Track unrecognized cards and lines that can't be parsed.
   // (encoded to prevent XSS)
@@ -20,9 +24,10 @@ function parseDecklist() {
   // Stop processing the function if there's no main deck
   if (deckmain == '') { return (null, null); }
 
-  // Split main deck and sideboard by newlines
+  // Split all decks by newlines
   deckmain = deckmain.split('\n');
   deckside = deckside.split('\n');
+
 
   var mtgoRE = /^(\d+)x*\s(.+)/; // MTGO deck format (4 Brainstorm) also TCG (4x Brainstorm)
   var mtgosbRE = /^SB:\s+(\d+)*\s*(.+)/; // Sideboard lines begin with SB:
@@ -120,28 +125,12 @@ function parseDecklist() {
       }
     }
   }
+  // straight alpha sort for now
+  maindeck = sortDecklist(maindeck, 'alphabetically', true);
+  sideboard = sortDecklist(sideboard, 'alphabetically');
+  runes = sortDecklist(runedeck, 'alphabetically');
+  battlefields = sortDecklist(battlefields, 'alphabetically');
 
-  // Now we need to sort the deck lists, with the sideboard always being sorted alphabetically
-  if ($('#sortorderfloat input[name=sortorder]:checked').prop('id') == 'sortorder1') { // alpabetical
-    maindeck = sortDecklist(maindeck, 'alphabetically');
-    sideboard = sortDecklist(sideboard, 'alphabetically');
-  }
-  else if ($('#sortorderfloat input[name=sortorder]:checked').prop('id') == 'sortorder2') { // CMC
-    maindeck = sortDecklist(maindeck, 'cmc');
-    sideboard = sortDecklist(sideboard, 'alphabetically');
-  }
-  else if ($('#sortorderfloat input[name=sortorder]:checked').prop('id') == 'sortorder3') { // color
-    maindeck = sortDecklist(maindeck, 'color');
-    sideboard = sortDecklist(sideboard, 'alphabetically');
-  }
-  else if ($('#sortorderfloat input[name=sortorder]:checked').prop('id') == 'sortorder4') { // numeric
-    maindeck = sortDecklist(maindeck, 'numerically');
-    sideboard = sortDecklist(sideboard, 'alphabetically');
-  }
-  else if ($('#sortorderfloat input[name=sortorder]:checked').prop('id') == 'sortorder6') { // type
-    maindeck = sortDecklist(maindeck, 'type');
-    sideboard = sortDecklist(sideboard, 'alphabetically');
-  }
 
   // Check the card name against the card database. If it exists, add it to the
   // appropriate list (main or side), otherwise add it to the unrecognized map.
@@ -149,15 +138,20 @@ function parseDecklist() {
     list = list || 'main';
     card = card.trim();
 
-    //if (card.slice(0,2).toLowerCase() === 'ae') { recognized = objectHasPropertyCI(cards, '\u00e6'+card.slice(2)); }
-    //else { recognized = objectHasPropertyCI(cards, card); }
     card = card.replace("’", "'").replace(" / ", " // ");
     recognized = objectHasPropertyCI(cards, card);
-
     // Always add the card to the list, regardless of if the card is recognized
     // Still, if not recognized, add it to its special dictionary (unrecognized)
 
     if (recognized) {
+      switch (recognized.t) {
+        case 'battlefield':
+          list = 'battlefield';
+          break;
+        case 'rune':
+          list = 'rune';
+          break;
+      }
       list_add(list, recognized.n, quantity);
       goodcards.push(recognized);
     } else {
@@ -198,18 +192,18 @@ function parseDecklist() {
   }
 }
 
-function sortDecklist(deck, sortorder) {
+function sortDecklist(deck, sortorder, keepFirst = false) {
 
   // Sort the decklist alphabetically, if chosen
   if (sortorder == 'alphabetically') {
 
     // Add a case insensitive field to sort by
-    for (i = 0; i < deck.length; i++) { deck[i] = [deck[i][0].toLowerCase(), deck[i][0], deck[i][1]]; }
+    for (i = keepFirst ? 1 : 0; i < deck.length; i++) { deck[i] = [deck[i][0].toLowerCase(), deck[i][0], deck[i][1]]; }
 
     deck.sort();
 
     // After sorting is done, we can remove the lower case index
-    for (i = 0; i < deck.length; i++) { deck[i] = deck[i].splice(1, 2); }
+    for (i = keepFirst ? 1 : 0; i < deck.length; i++) { deck[i] = deck[i].splice(1, 2); }
   }
 
   // Sort the decklist by color, if chosen
@@ -443,7 +437,26 @@ function list_add(type, card, quantity) {
       sideboard.push([card, quantity]);
     }
     sideboard_count += parseInt(quantity);
+  } else if (type === 'rune') {
+    cardIndex = listContainsCard(runedeck, card);
+    if (cardIndex !== -1) {
+      // arggh, strings!
+      runedeck[cardIndex][1] = parseInt(runedeck[cardIndex][1]) + parseInt(quantity) + '';
+    } else {
+      runedeck.push([card, quantity]);
+    }
+    runedeck_count += parseInt(quantity);
+  } else if (type === 'battlefield') {
+    cardIndex = listContainsCard(battlefields, card);
+    if (cardIndex !== -1) {
+      // arggh, strings!
+      battlefields[cardIndex][1] = parseInt(battlefields[cardIndex][1]) + parseInt(quantity) + '';
+    } else {
+      battlefields.push([card, quantity]);
+    }
+    battlefield_count += parseInt(quantity);
   }
+
 
   // Returns the index of the card:quantity pair within the given list, or -1 if not found
   function listContainsCard(list, card) {
